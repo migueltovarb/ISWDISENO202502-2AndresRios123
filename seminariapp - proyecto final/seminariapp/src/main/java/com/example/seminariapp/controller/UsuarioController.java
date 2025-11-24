@@ -21,7 +21,11 @@ public class UsuarioController {
     // Crear usuario
     @PostMapping
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.crearUsuario(usuario));
+        try {
+            return ResponseEntity.ok(usuarioService.crearUsuario(usuario));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // Obtener todos
@@ -48,5 +52,15 @@ public class UsuarioController {
     @GetMapping("/rol/{rol}")
     public ResponseEntity<List<Usuario>> obtenerPorRol(@PathVariable TipoRol rol) {
         return ResponseEntity.ok(usuarioService.obtenerPorRol(rol));
+    }
+
+    // Cambiar rol (solo admin)
+    @PatchMapping("/{id}/rol")
+    public ResponseEntity<Usuario> cambiarRol(
+            @PathVariable String id,
+            @RequestParam TipoRol rol
+    ) {
+        Usuario actualizado = usuarioService.cambiarRol(id, rol);
+        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
     }
 }
