@@ -23,19 +23,19 @@ public class PagoService {
         this.inscripcionRepository = inscripcionRepository;
     }
 
-    // Crear pago
+    // Crear pago: lo marca aprobado de inmediato y aprueba la inscripción
     public Pago crearPago(String inscripcionId, float monto, TipoPago medio) {
 
         // Validar inscripción
         Inscripcion inscripcion = inscripcionRepository.findById(inscripcionId)
                 .orElseThrow(() -> new RuntimeException("La inscripción no existe"));
 
-        // Crear pago en estado PENDIENTE
+        // Crear pago en estado APROBADO
         Pago pago = new Pago(
                 null,
                 monto,
                 medio,
-                TipoEstado.PENDIENTE,
+                TipoEstado.APROBADO,
                 UUID.randomUUID().toString(),   // referencia única
                 new Date(),
                 inscripcionId
@@ -43,8 +43,9 @@ public class PagoService {
 
         pago = pagoRepository.save(pago);
 
-        // Asociar pago a la inscripción
+        // Asociar pago a la inscripción y aprobarla
         inscripcion.setPagoId(pago.getId());
+        inscripcion.setEstado(TipoEstado.APROBADO);
         inscripcionRepository.save(inscripcion);
 
         return pago;

@@ -21,8 +21,8 @@ public class UsuarioService {
     }
 
     public Usuario crearUsuario(Usuario usuario) {
-        if (usuario.getRol() == TipoRol.ADMIN || usuario.getRol() == TipoRol.COORDINADOR) {
-            throw new IllegalArgumentException("No se pueden registrar usuarios con rol ADMIN o COORDINADOR desde el registro p\u00fablico");
+        if (usuario.getRol() == TipoRol.ADMIN) {
+            throw new IllegalArgumentException("No se pueden registrar usuarios con rol ADMIN desde el registro p\u00fablico");
         }
         if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
             throw new IllegalArgumentException("La contrase\u00f1a es obligatoria");

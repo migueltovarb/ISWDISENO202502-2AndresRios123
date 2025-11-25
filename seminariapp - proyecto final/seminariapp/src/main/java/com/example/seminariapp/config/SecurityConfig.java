@@ -50,9 +50,12 @@ public class SecurityConfig {
                         // Eventos: lectura libre; cambios solo coordinador/admin
                         .requestMatchers(HttpMethod.GET, "/eventos/**").permitAll()
                         .requestMatchers("/eventos/**").hasAnyRole("COORDINADOR", "ADMIN")
+                        // Materiales: lectura libre (detalle de evento), escritura sigue restringida
+                        .requestMatchers(HttpMethod.GET, "/materiales/**").permitAll()
                         .requestMatchers("/materiales/**").hasAnyRole("PONENTE", "COORDINADOR", "ADMIN")
                         .requestMatchers("/inscripciones/**").hasAnyRole("ESTUDIANTE", "COORDINADOR", "ADMIN")
-                        .requestMatchers("/pagos/**").hasAnyRole("ESTUDIANTE", "COORDINADOR", "ADMIN")
+                        // Pagos abiertos temporalmente
+                        .requestMatchers("/pagos/**").permitAll()
                         .requestMatchers("/certificados/**").hasAnyRole("COORDINADOR", "ADMIN")
                         .anyRequest().authenticated()
                 )
