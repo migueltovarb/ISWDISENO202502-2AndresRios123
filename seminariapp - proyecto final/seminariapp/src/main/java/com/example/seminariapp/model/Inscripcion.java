@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Document(collection = "inscripciones")
 public class Inscripcion {
@@ -20,11 +22,12 @@ public class Inscripcion {
 
     private String pagoId;
     private String certificadoId;
+    private Map<Integer, Boolean> asistencias = new HashMap<>();
 
     public Inscripcion() {}
 
     public Inscripcion(String id, Date fechaCreacion, TipoEstado estado, String usuarioId, String eventoId,
-                       String pagoId, String certificadoId) {
+                       String pagoId, String certificadoId, Map<Integer, Boolean> asistencias) {
         this.id = id;
         this.fechaCreacion = fechaCreacion;
         this.estado = estado;
@@ -32,6 +35,9 @@ public class Inscripcion {
         this.eventoId = eventoId;
         this.pagoId = pagoId;
         this.certificadoId = certificadoId;
+        if (asistencias != null) {
+            this.asistencias = asistencias;
+        }
     }
 
     // Getters y Setters
@@ -55,4 +61,7 @@ public class Inscripcion {
 
     public String getCertificadoId() { return certificadoId; }
     public void setCertificadoId(String certificadoId) { this.certificadoId = certificadoId; }
+
+    public Map<Integer, Boolean> getAsistencias() { return asistencias; }
+    public void setAsistencias(Map<Integer, Boolean> asistencias) { this.asistencias = asistencias; }
 }

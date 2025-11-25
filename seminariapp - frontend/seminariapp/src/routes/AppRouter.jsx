@@ -12,6 +12,8 @@ import AdminEvents from '../pages/AdminEvents.jsx'
 import Payment from '../pages/Payment.jsx'
 import Materials from '../pages/Materials.jsx'
 import EventDetail from '../pages/EventDetail.jsx'
+import Attendance from '../pages/Attendance.jsx'
+import Certificates from '../pages/Certificates.jsx'
 
 const AppRouter = () => {
   return (
@@ -71,6 +73,24 @@ const AppRouter = () => {
               <RoleRoute roles={[ROLES.PONENTE, ROLES.COORDINADOR, ROLES.ADMIN]}>
                 <Materials />
               </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/asistencia/:eventoId"
+          element={
+            <ProtectedRoute>
+              <RoleRoute roles={[ROLES.PONENTE, ROLES.COORDINADOR, ROLES.ADMIN]}>
+                <Attendance />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/certificados"
+          element={
+            <ProtectedRoute>
+              <Certificates />
             </ProtectedRoute>
           }
         />

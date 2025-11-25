@@ -66,7 +66,7 @@ const Register = () => {
         <div className="form-group">
           <label htmlFor="rol">Tipo de rol al registrarse</label>
           <select id="rol" name="rol" value={form.rol} onChange={handleChange}>
-            {[ROLES.ESTUDIANTE, ROLES.PONENTE, ROLES.COORDINADOR].map((role) => (
+            {[ROLES.ESTUDIANTE, ROLES.PONENTE].map((role) => (
               <option key={role} value={role}>
                 {roleLabels[role]}
               </option>
