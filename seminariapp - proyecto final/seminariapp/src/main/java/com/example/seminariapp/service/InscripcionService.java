@@ -2,7 +2,6 @@ package com.example.seminariapp.service;
 
 import com.example.seminariapp.model.Evento;
 import com.example.seminariapp.model.Inscripcion;
-import com.example.seminariapp.model.Usuario;
 import com.example.seminariapp.model.enums.TipoEstado;
 import com.example.seminariapp.repository.EventoRepository;
 import com.example.seminariapp.repository.InscripcionRepository;
@@ -10,7 +9,9 @@ import com.example.seminariapp.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class InscripcionService {
@@ -54,7 +55,8 @@ public class InscripcionService {
                 usuarioId,
                 eventoId,
                 null,
-                null
+                null,
+                new HashMap<>()
         );
 
         return inscripcionRepository.save(inscripcion);
@@ -79,5 +81,29 @@ public class InscripcionService {
     // LISTAR POR EVENTO
     public List<Inscripcion> listarPorEvento(String eventoId) {
         return inscripcionRepository.findByEventoId(eventoId);
+    }
+
+    public Map<Integer, Boolean> obtenerAsistencias(String inscripcionId) {
+        Inscripcion inscripcion = inscripcionRepository.findById(inscripcionId)
+                .orElseThrow(() -> new RuntimeException("La inscripción no existe"));
+        return inscripcion.getAsistencias() != null ? inscripcion.getAsistencias() : new HashMap<>();
+    }
+
+    public Inscripcion marcarAsistencia(String inscripcionId, int sesion, boolean presente) {
+        Inscripcion inscripcion = inscripcionRepository.findById(inscripcionId)
+                .orElseThrow(() -> new RuntimeException("La inscripción no existe"));
+
+        if (inscripcion.getEstado() != TipoEstado.APROBADO) {
+            throw new RuntimeException("Solo inscripciones aprobadas pueden marcar asistencia");
+        }
+
+        Map<Integer, Boolean> asist = inscripcion.getAsistencias();
+        if (asist == null) {
+            asist = new HashMap<>();
+        }
+        asist.put(sesion, presente);
+        inscripcion.setAsistencias(asist);
+
+        return inscripcionRepository.save(inscripcion);
     }
 }

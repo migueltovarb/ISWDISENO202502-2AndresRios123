@@ -20,10 +20,16 @@ const Profile = () => {
     return map
   }, [eventos])
 
+  const eventosComoPonente = useMemo(() => {
+    if (!user?.id) return []
+    return (eventos || []).filter((ev) => ev.ponenteId === user.id)
+  }, [eventos, user?.id])
+
   useEffect(() => {
     const loadData = async () => {
       if (authLoading || !user?.id) return
       try {
+        setError(null)
         const [ins, evs] = await Promise.all([
           inscripcionService.listByUsuario(user.id),
           eventoService.list(),
@@ -65,7 +71,9 @@ const Profile = () => {
         </div>
       </section>
 
-      {error && <p className="status-pill status-danger">{error}</p>}
+      {error && inscripciones.length === 0 && eventos.length === 0 && (
+        <p className="status-pill status-danger">{error}</p>
+      )}
 
       <section className="card-surface">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -96,6 +104,34 @@ const Profile = () => {
           </div>
         )}
       </section>
+
+      {user?.rol === 'PONENTE' && (
+        <section className="card-surface">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 className="section-title">Eventos donde soy ponente</h2>
+            <span className="tag">{eventosComoPonente.length}</span>
+          </div>
+          {eventosComoPonente.length === 0 ? (
+            <p className="text-muted">No tienes eventos asignados como ponente.</p>
+          ) : (
+            <div className="grid grid-2">
+              {eventosComoPonente.map((ev) => (
+                <EventCard
+                  key={`ponente-${ev.id}`}
+                  item={ev}
+                  type={ev.tipo?.toLowerCase() || 'evento'}
+                  enrolled
+                  status={null}
+                  inscritos={counts.get(ev.id)}
+                  onView={() => navigate(`/asistencia/${ev.id}`)}
+                  onToggleEnroll={null}
+                  onPay={null}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     </div>
   )
 }

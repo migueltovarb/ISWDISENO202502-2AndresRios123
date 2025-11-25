@@ -52,6 +52,11 @@ const Navbar = () => {
               Perfil
             </Link>
           )}
+          {isAuthenticated && (
+            <Link to="/certificados" className="tag nav-link">
+              Certificados
+            </Link>
+          )}
           {(role === ROLES.PONENTE || role === ROLES.COORDINADOR || role === ROLES.ADMIN) && (
             <Link to="/materiales" className="tag nav-link">
               Materiales

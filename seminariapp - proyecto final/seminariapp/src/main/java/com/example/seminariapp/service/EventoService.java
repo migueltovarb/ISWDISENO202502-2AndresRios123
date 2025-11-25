@@ -41,6 +41,13 @@ public class EventoService {
         evento.setCupoMaximo(eventoActualizado.getCupoMaximo());
         evento.setPrecio(eventoActualizado.getPrecio());
         evento.setTipo(eventoActualizado.getTipo());
+        // Actualizar ponente si viene en la petición
+        if (eventoActualizado.getPonenteId() != null && !eventoActualizado.getPonenteId().isBlank()) {
+            usuarioRepository.findById(eventoActualizado.getPonenteId())
+                    .filter(u -> u.getRol() == TipoRol.PONENTE)
+                    .orElseThrow(() -> new RuntimeException("El ponente no existe o no tiene rol PONENTE"));
+            evento.setPonenteId(eventoActualizado.getPonenteId());
+        }
 
         return eventoRepository.save(evento);
     }

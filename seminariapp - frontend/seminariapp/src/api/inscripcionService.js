@@ -21,4 +21,16 @@ export const inscripcionService = {
     const { data } = await axiosClient.get(`/inscripciones/evento/${eventoId}`)
     return data
   },
+  listAprobadasDetalle: async (eventoId) => {
+    // GET /inscripciones/evento/{eventoId}/aprobadas
+    const { data } = await axiosClient.get(`/inscripciones/evento/${eventoId}/aprobadas`)
+    return data
+  },
+  marcarAsistencia: async (inscripcionId, sesion, presente = true) => {
+    // PATCH /inscripciones/{id}/asistencia?sesion=&presente=
+    const { data } = await axiosClient.patch(`/inscripciones/${inscripcionId}/asistencia`, null, {
+      params: { sesion, presente },
+    })
+    return data
+  },
 }

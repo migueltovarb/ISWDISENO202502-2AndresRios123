@@ -53,10 +53,12 @@ public class SecurityConfig {
                         // Materiales: lectura libre (detalle de evento), escritura sigue restringida
                         .requestMatchers(HttpMethod.GET, "/materiales/**").permitAll()
                         .requestMatchers("/materiales/**").hasAnyRole("PONENTE", "COORDINADOR", "ADMIN")
-                        .requestMatchers("/inscripciones/**").hasAnyRole("ESTUDIANTE", "COORDINADOR", "ADMIN")
+                        // Inscripciones: acceso a cualquiera autenticado (incluye ponente)
+                        .requestMatchers("/inscripciones/**").authenticated()
                         // Pagos abiertos temporalmente
                         .requestMatchers("/pagos/**").permitAll()
-                        .requestMatchers("/certificados/**").hasAnyRole("COORDINADOR", "ADMIN")
+                        // Certificados: cualquier autenticado puede generar/consultar
+                        .requestMatchers("/certificados/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
